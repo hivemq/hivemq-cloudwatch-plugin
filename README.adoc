@@ -1,0 +1,150 @@
+= HiveMQ AWS CloudWatch Plugin
+
+
+== Purpose
+
+This Plugin allows to report HiveMQ metrics to AWS CloudWatch.
+
+It is possible to send every HiveMQ metric to CloudWatch. Every metric which should be reported
+must be configured explicitly to reduce the costs, since CloudWatch can be expensive if you
+publish too much (unnecessary) data.
+
+
+
+[CAUTION]
+.AWS Cloudwatch costs
+====
+AWS Cloudwatch metrics can be *very* expensive. So please make sure you really want to report the specified metrics.
+You can find the full AWS pricing http://https://aws.amazon.com/cloudwatch/pricing/[here].
+
+At the time of writing the AWS prices are the following:
+
+* `$0.50` per custom metric
+* `$0.01` per 1000 _GetMetricStatistics_, _ListMetrics_, or _PutMetricData_ requests
+
+====
+
+
+== Configuration
+
+There are two configuration files needed for the plugin in order to operate:
+
+. `cloudwatch_config.properties`: This config file is used for general configuration, like the publishing interval
+. `cloudwatch_metrics.properties`: This config file specifies all metrics which should be reported to CloudWatch
+
+
+=== cloudwatch_config.properties
+
+The cloudwatch_config.properties file needs to be placed in the hivemq `config` folder.
+
+The following properties are available:
+
+|===
+| Property | Description
+
+| reportInverval
+| A value in minutes which sets the reporting interval (defaults to 1 minute)
+
+|===
+
+
+=== cloudwatch_metrics.properties
+
+The cloudwatch_metrics.properties is a list of metric names which should be reported to CloudWatch.
+
+[IMPORTANT]
+If a metric does not exist yet, this plugin will create the specified metric
+
+Example
+
+-[source,bash]
+----
+com.hivemq.messages.incoming.total.count
+com.hivemq.messages.outgoing.total.count
+
+# You can comment out metrics you don't need
+
+#com.hivemq.messages.incoming.total.rate
+#com.hivemq.messages.outgoing.total.rate
+#com.hivemq.messages.outgoing.connack.count
+#com.hivemq.messages.outgoing.connack.rate
+#com.hivemq.messages.incoming.connect.count
+#com.hivemq.messages.incoming.connect.rate
+#com.hivemq.messages.incoming.disconnect.count
+#com.hivemq.messages.incoming.disconnect.rate
+#com.hivemq.messages.incoming.pingreq.count
+#com.hivemq.messages.incoming.pingreq.rate
+#com.hivemq.messages.outgoing.pingresp.count
+#com.hivemq.messages.outgoing.pingresp.rate
+#com.hivemq.messages.incoming.puback.count
+#com.hivemq.messages.outgoing.puback.count
+#com.hivemq.messages.incoming.puback.rate
+#com.hivemq.messages.outgoing.puback.rate
+#com.hivemq.messages.incoming.pubcomp.count
+#com.hivemq.messages.outgoing.pubcomp.count
+#com.hivemq.messages.incoming.pubcomp.rate
+#com.hivemq.messages.outgoing.pubcomp.rate
+#com.hivemq.messages.incoming.publish.count
+#com.hivemq.messages.outgoing.publish.count
+#com.hivemq.messages.incoming.publish.rate
+#com.hivemq.messages.outgoing.publish.rate
+#com.hivemq.messages.incoming.pubrec.count
+#com.hivemq.messages.outgoing.pubrec.count
+#com.hivemq.messages.incoming.pubrec.rate
+#com.hivemq.messages.outgoing.pubrec.rate
+#com.hivemq.messages.incoming.pubrel.count
+#com.hivemq.messages.outgoing.pubrel.count
+#com.hivemq.messages.incoming.pubrel.rate
+#com.hivemq.messages.outgoing.pubrel.rate
+#com.hivemq.messages.outgoing.suback.count
+#com.hivemq.messages.outgoing.suback.rate
+#com.hivemq.messages.incoming.subscribe.count
+#com.hivemq.messages.incoming.subscribe.rate
+#com.hivemq.messages.outgoing.unsuback.count
+#com.hivemq.messages.outgoing.unsuback.rate
+#com.hivemq.messages.incoming.unsubscribe.count
+#com.hivemq.messages.incoming.unsubscribe.rate
+#com.hivemq.sessions.persistent.active
+#com.hivemq.networking.connections.mean
+#com.hivemq.messages.incoming.publish.bytes
+#com.hivemq.messages.outgoing.publish.bytes
+#com.hivemq.messages.incoming.total.bytes
+#com.hivemq.messages.outgoing.total.bytes
+#com.hivemq.messages.retained.mean
+#com.hivemq.subscriptions.overall.current
+#com.hivemq.plugin.callbacks.after-login.success.time
+#com.hivemq.plugin.callbacks.after-login.failed.time
+#com.hivemq.plugin.callbacks.authentication.time
+#com.hivemq.plugin.callbacks.restrictions.time
+#com.hivemq.plugin.callbacks.authorization.time
+#com.hivemq.plugin.callbacks.permissions-disconnect.publish.time
+#com.hivemq.plugin.callbacks.permissions-disconnect.subscribe.time
+#com.hivemq.plugin.callbacks.connect.time
+#com.hivemq.plugin.callbacks.disconnect.time
+#com.hivemq.plugin.callbacks.connack-send.time
+#com.hivemq.plugin.callbacks.publish-received.time
+#com.hivemq.plugin.callbacks.publish-send.time
+#com.hivemq.plugin.callbacks.subscribe.time
+#com.hivemq.plugin.callbacks.unsubscribe.time
+#com.hivemq.plugin.callbacks.puback-send.time
+#com.hivemq.plugin.callbacks.puback-received.time
+#com.hivemq.plugin.callbacks.pubcomp-received.time
+#com.hivemq.plugin.callbacks.ping.time
+#com.hivemq.plugin.callbacks.pubrel-received.time
+#com.hivemq.plugin.callbacks.pubrec-received.time
+#com.hivemq.plugin.callbacks.pubcomp-send.time
+#com.hivemq.plugin.callbacks.pubrel-send.time
+#com.hivemq.plugin.callbacks.suback-send.time
+#com.hivemq.plugin.callbacks.unsuback-send.time
+#com.hivemq.exceptions.total
+#com.hivemq.sessions.overall.current
+#com.hivemq.networking.bytes.read.current
+#com.hivemq.networking.bytes.write.total
+#com.hivemq.networking.bytes.write.current
+#com.hivemq.networking.bytes.read.total
+#com.hivemq.networking.connections.current
+#com.hivemq.messages.retained.current
+----
+
+
+
