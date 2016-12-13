@@ -16,15 +16,15 @@ import java.util.Properties;
 /**
  * @author Dominik Obermaier
  */
-public class CloudWatchMetricsReader {
+public class CloudwatchMetricsReader {
 
 
-    private static final Logger log = LoggerFactory.getLogger(CloudWatchMetricsReader.class);
+    private static final Logger log = LoggerFactory.getLogger(CloudwatchMetricsReader.class);
 
     private final SystemInformation systemInformation;
 
     @Inject
-    CloudWatchMetricsReader(SystemInformation systemInformation) {
+    CloudwatchMetricsReader(final SystemInformation systemInformation) {
         this.systemInformation = systemInformation;
     }
 
