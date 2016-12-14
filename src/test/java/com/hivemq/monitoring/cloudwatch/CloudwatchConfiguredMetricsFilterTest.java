@@ -19,7 +19,7 @@ import static org.mockito.Mockito.when;
 /**
  * @author Dominik Obermaier
  */
-public class CloudWatchConfiguredMetricsFilterTest {
+public class CloudwatchConfiguredMetricsFilterTest {
 
     @Rule
     public TemporaryFolder temporaryFolder = new TemporaryFolder();
@@ -28,7 +28,7 @@ public class CloudWatchConfiguredMetricsFilterTest {
     SystemInformation systemInformation;
 
 
-    private CloudWatchMetricsReader reader;
+    private CloudwatchMetricsReader reader;
     private File configFolder;
 
     @Before
@@ -38,7 +38,7 @@ public class CloudWatchConfiguredMetricsFilterTest {
 
         configFolder = temporaryFolder.newFolder();
         when(systemInformation.getConfigFolder()).thenReturn(configFolder);
-        reader = new CloudWatchMetricsReader(systemInformation);
+        reader = new CloudwatchMetricsReader(systemInformation);
     }
 
     @Test

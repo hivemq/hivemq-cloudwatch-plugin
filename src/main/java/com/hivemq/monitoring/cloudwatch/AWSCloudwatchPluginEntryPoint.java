@@ -1,5 +1,6 @@
 package com.hivemq.monitoring.cloudwatch;
 
+import com.amazonaws.ClientConfiguration;
 import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
 import com.amazonaws.services.cloudwatch.AmazonCloudWatchAsyncClient;
 import com.blacklocus.metrics.CloudWatchReporter;
@@ -29,21 +30,24 @@ public class AWSCloudwatchPluginEntryPoint extends PluginEntryPoint {
 
     private final MetricRegistry metricRegistry;
     private final PluginExecutorService pluginExecutorService;
-    private final CloudWatchMetricsReader metricsReader;
+    private final CloudwatchMetricsReader metricsReader;
+    private final CloudwatchConfiguration cloudwatchConfiguration;
 
     @Inject
     public AWSCloudwatchPluginEntryPoint(final MetricRegistry metricRegistry,
                                          final PluginExecutorService pluginExecutorService,
-                                         final CloudWatchMetricsReader metricsReader) {
+                                         final CloudwatchMetricsReader metricsReader,
+                                         final CloudwatchConfiguration cloudwatchConfiguration) {
         this.metricRegistry = metricRegistry;
         this.pluginExecutorService = pluginExecutorService;
         this.metricsReader = metricsReader;
+        this.cloudwatchConfiguration = cloudwatchConfiguration;
     }
 
     @PostConstruct
     public void postConstruct() {
 
-        log.info("Staring CloudWatch Metrics Reporter");
+        log.info("Starting CloudWatch Metrics Reporter");
 
         final List<String> strings = metricsReader.readProperties();
 
@@ -55,9 +59,9 @@ public class AWSCloudwatchPluginEntryPoint extends PluginEntryPoint {
                 metricRegistry,
                 "hivemq-metrics",
                 new ConfiguredMetricsFilter(strings),
-                new AmazonCloudWatchAsyncClient(new DefaultAWSCredentialsProviderChain(), pluginExecutorService)
-                //TODO: Read timeout from properties file
-        ).start(1, TimeUnit.MINUTES);
+                new AmazonCloudWatchAsyncClient(new DefaultAWSCredentialsProviderChain(), new ClientConfiguration()
+                        .withConnectionTimeout(cloudwatchConfiguration.getConnectionTimeout()), pluginExecutorService)
+        ).start(cloudwatchConfiguration.getReportInterval(), TimeUnit.MINUTES);
 
     }
 
@@ -72,10 +76,7 @@ public class AWSCloudwatchPluginEntryPoint extends PluginEntryPoint {
 
         @Override
         public boolean matches(final String name, final Metric metric) {
-            if (metrics.contains(name)) {
-                return true;
-            }
-            return false;
+            return metrics.contains(name);
         }
     }
 }

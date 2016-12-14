@@ -15,7 +15,7 @@ publish too much (unnecessary) data.
 .AWS Cloudwatch costs
 ====
 AWS Cloudwatch metrics can be *very* expensive. So please make sure you really want to report the specified metrics.
-You can find the full AWS pricing http://https://aws.amazon.com/cloudwatch/pricing/[here].
+You can find the full AWS pricing https://aws.amazon.com/cloudwatch/pricing/[here].
 
 At the time of writing the AWS prices are the following:
 
@@ -44,6 +44,8 @@ The following properties are available:
 
 | reportInverval
 | A value in minutes which sets the reporting interval (defaults to 1 minute)
+| connectionTimeout
+| The connection timeout in ms. The default is the `com.amazonaws.ClientConfiguration.	DEFAULT_CONNECTION_TIMEOUT`
 
 |===
 
