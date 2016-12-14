@@ -36,8 +36,8 @@ public abstract class CloudwatchConfigurationReader {
         configFile = new File(systemInformation.getConfigFolder() + File.separator + getFileName());
         properties = new Properties();
 
-        try {
-            properties.load(new FileReader(configFile));
+        try (final FileReader configReader = new FileReader(configFile)) {
+            properties.load(configReader);
         } catch (IOException ignored) {
             log.error("Not able to load configuration file {}, using default configs", configFile.getAbsolutePath());
         }

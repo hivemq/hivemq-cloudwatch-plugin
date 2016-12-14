@@ -47,7 +47,7 @@ public class AWSCloudwatchPluginEntryPoint extends PluginEntryPoint {
     @PostConstruct
     public void postConstruct() {
 
-        log.info("Staring CloudWatch Metrics Reporter");
+        log.info("Starting CloudWatch Metrics Reporter");
 
         final List<String> strings = metricsReader.readProperties();
 
@@ -76,10 +76,7 @@ public class AWSCloudwatchPluginEntryPoint extends PluginEntryPoint {
 
         @Override
         public boolean matches(final String name, final Metric metric) {
-            if (metrics.contains(name)) {
-                return true;
-            }
-            return false;
+            return metrics.contains(name);
         }
     }
 }
